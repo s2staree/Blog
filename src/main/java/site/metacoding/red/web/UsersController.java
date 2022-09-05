@@ -32,7 +32,7 @@ public class UsersController {
 	   Users usersPS = usersDao.login(loginDto);
 	   if(usersPS != null) { // 로그인 인증 됨
 //		   HttpSession session = request.getSession();
-		   session.setAttribute("principal", usersPS);
+		   session.setAttribute("principal", usersPS);	// (String, object); 타입을 모를때 object로 받음(모든 클래스는 object의 자식)
 		   return "redirect:/";
 	   }else {	// 로그인 인증 안됨
 		   return "redirect:/loginForm";
