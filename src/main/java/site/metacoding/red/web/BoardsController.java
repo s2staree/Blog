@@ -45,11 +45,13 @@ public class BoardsController {
 		return "redirect:/";
 	}
    
+	
+	
    @GetMapping({"/","/boards"})
-   public String getBoardList(Model model) {
-	   List<MainDto> boardsList = boardsDao.findAll();
-	   System.out.println("------------------------");
-	   System.out.println(boardsList.size());
+   public String getBoardList(Model model, Integer page) {
+	   if(page == null) page = 0;
+	   int startNum = page *10;
+	   List<MainDto> boardsList = boardsDao.findAll(startNum);
 	   model.addAttribute("boardsList", boardsList);
       return "boards/main";
    }
