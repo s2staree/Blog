@@ -1,4 +1,4 @@
-package site.metacoding.red;
+package site.metacoding.red_Blo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

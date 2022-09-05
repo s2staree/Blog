@@ -1,4 +1,4 @@
-package site.metacoding.red;
+package site.metacoding.red_Blog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
