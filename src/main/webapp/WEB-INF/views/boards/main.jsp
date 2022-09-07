@@ -22,8 +22,31 @@
 
 		</tbody>
 	</table>
+	
+	<ul class="pagination">
+	      <li class="page-item disabled">
+	      <a class="page-link" href="?page=${paging.currentPage-1}">Prev
+	      </a>
+	      </li>
+      <c:forEach var="num" begin="1" end="${paging.totalPage}" step="1">
+         <li class="page-item">
+         <a class="page-link" href="?page=${num-1}">${num}
+         </a>
+         </li>
+      </c:forEach>
+	      <li class="page-item">
+	      <a class="page-link" href="?page=${paging.currentPage+1}">Next
+	      </a>
+	      </li>
+    </ul>
+	
+	<a href="?page=${paging.currentPage-1}">이전페이지</a>
+	<c:forEach var="num" begin="1" end="${paging.totalPage}" step="1">
+		<a href="?page=${num-1}">${num}</a>
+	</c:forEach>
+	<a href="?page=${paging.currentPage+1}">다음페이지</a>
 
-	<div style="background-color: 'grey' ;">
+	<div style="background-color: grey">
 		<h3>totalCount : ${paging.totalCount}</h3>
 		<h3>totalPage : ${paging.totalPage}</h3>
 		<h3>currentPage : ${paging.currentPage}</h3>
