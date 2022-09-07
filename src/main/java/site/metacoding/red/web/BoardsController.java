@@ -29,15 +29,24 @@ public class BoardsController {
 	
 	@PostMapping("/boards/{id}/delete")
 	public String deleteBoards(@PathVariable Integer id) {
+		Users principal = (Users) session.getAttribute("principal");
 		Boards boardsPS = boardsDao.findById(id);
 		
-		// 인증 체크
-		
-		// 권한 체크 (세션 "principal.getId()"와 "boardsPS"의 "userId"를 비교)
-		
+		// 비정상 요청 체크
 		if(boardsPS != null) {	// if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는 게 좋다.
 			return "redirect:/boards/" + id;
 		}	// if + else문으로 짜면 분리가 안되므로 if문만 짜는게 분리가 편함!
+		
+		// 인증 체크 (로그인 되었는지?)
+		if (principal == null) {
+			return "redirect:/loginForm";
+		}
+		
+		// 권한 체크 (세션 "principal.getId()"와 "boardsPS"의 "userId"를 비교, 같아야 삭제 가능)
+		if(principal.getId() != boardsPS.getUsersId()) {
+			return "redirect:/boards/"+id;
+		}
+
 		boardsDao.delete(id);
 		return "redirect:/";
 	}
@@ -65,30 +74,32 @@ public class BoardsController {
 	@GetMapping({"/", "/boards"})
 	public String getBoardList(Model model, Integer page) { // 0->0, 1->10, 2->20
 		if(page == null) page = 0;
-		int startNum = page * 3;	// 1.수정함
+		int startNum = page * 3;
 
 		List<MainDto> boardsList = boardsDao.findAll(startNum);
 		PagingDto paging = boardsDao.paging(page);
 		
 		// paging.set 머시기로 dto 완성하기!
-		// 2. 수정함
-		final int blockCount = 5;
-		
-		int currentBlock = page / blockCount;
-		int startPageNum = 1 + blockCount * currentBlock;
-		int lastPageNum = 5 + blockCount * currentBlock;
-		
-		if (paging.getTotalPage() < lastPageNum) {
-			lastPageNum = paging.getTotalPage();
-		}
-		
-		paging.setBlockCount(blockCount);
-		paging.setCurrentBlock(currentBlock);
-		paging.setStartPageNum(startPageNum);
-		paging.setLastPageNum(lastPageNum);
+		paging.makeBlockInfo();
+
+//		final int blockCount = 5;
+//		
+//		int currentBlock = page / blockCount;
+//		int startPageNum = 1 + blockCount * currentBlock;
+//		int lastPageNum = 5 + blockCount * currentBlock;
+//		
+//		if (paging.getTotalPage() < lastPageNum) {
+//			lastPageNum = paging.getTotalPage();
+//		}
+//		
+//		paging.setBlockCount(blockCount);
+//		paging.setCurrentBlock(currentBlock);
+//		paging.setStartPageNum(startPageNum);
+//		paging.setLastPageNum(lastPageNum);
 		
 		model.addAttribute("boardsList", boardsList);
 		model.addAttribute("paging", paging);
+		
 		return "boards/main";
 	}
 	

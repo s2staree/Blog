@@ -32,7 +32,7 @@
 	         Prev
 	     </a>
          </li>
-      <c:forEach var="num" begin="1" end="${paging.totalPage}" step="1">
+      <c:forEach var="num" begin="${paging.startPageNum}" end="${paging.lastPageNum}" step="1">
          <li class="page-item" ${paging.currentPage == num-1 ? "active" : ""}>
 	         <a class="page-link" href="?page=${num-1}">
 	         ${num}
@@ -48,13 +48,19 @@
    	</ul>
 	</div>
 	
+	<!-- 
 	<a href="?page=${paging.currentPage-1}">이전페이지</a>
 	<c:forEach var="num" begin="1" end="${paging.totalPage}" step="1">
 		<a href="?page=${num-1}">${num}</a>
 	</c:forEach>
 	<a href="?page=${paging.currentPage+1}">다음페이지</a>
+	 -->
 
 	<div style="background-color: grey">
+		<h3>blockCount : ${paging.blockCount}</h3>
+		<h3>currentBlock : ${paging.currentBlock}</h3>
+		<h3>startPageNum : ${paging.startPageNum}</h3>
+		<h3>lastPageNum : ${paging.lastPageNum}</h3>
 		<h3>totalCount : ${paging.totalCount}</h3>
 		<h3>totalPage : ${paging.totalPage}</h3>
 		<h3>currentPage : ${paging.currentPage}</h3>
