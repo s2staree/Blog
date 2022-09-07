@@ -13,4 +13,9 @@ public class PagingDto {
 	private boolean isLast; // 마지막 페이지. getter가 만들어지면 isLast() 이름으로 만들어짐.
 	private boolean isFirst; // 첫 페이지. getter가 만들어지면 isFirst() 이름으로 만들어짐.
 	
+	private Integer pageBlock;	// 한 페이지의 페이지 넘버 수(총 5) 1-5, 6-10, 
+	private Integer startPageNum;	// (변수) 1 -> 6 -> 11
+	private Integer lastPageNum; // (변수) 5 -> 10 -> 15
+	private Integer blockPage; // (변수) 한 페이지에 보여질 게시글 수 => startPageNum, lastPageNum 결정됨
+		
 }
