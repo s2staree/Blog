@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.red.domain.boards.Boards;
 import site.metacoding.red.domain.boards.BoardsDao;
 import site.metacoding.red.domain.users.Users;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
@@ -25,6 +26,21 @@ public class BoardsController {
 	private final BoardsDao boardsDao;
 	// @PostMapping("/boards/{id}/delete")
 	// @PostMapping("/boards/{id}/update")
+	
+	@PostMapping("/boards/{id}/delete")
+	public String deleteBoards(@PathVariable Integer id) {
+		Boards boardsPS = boardsDao.findById(id);
+		
+		// 인증 체크
+		
+		// 권한 체크 (세션 "principal.getId()"와 "boardsPS"의 "userId"를 비교)
+		
+		if(boardsPS != null) {	// if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는 게 좋다.
+			return "redirect:/boards/" + id;
+		}	// if + else문으로 짜면 분리가 안되므로 if문만 짜는게 분리가 편함!
+		boardsDao.delete(id);
+		return "redirect:/";
+	}
 	
 	@PostMapping("/boards")
 	public String writeBoards(WriteDto writeDto) {
@@ -77,7 +93,7 @@ public class BoardsController {
 	}
 	
 	@GetMapping("/boards/{id}")
-	public String getBoardList(@PathVariable Integer id, Model model) {
+	public String getBoardDetail(@PathVariable Integer id, Model model) {
 		model.addAttribute("boards", boardsDao.findById(id));
 		return "boards/detail";
 	}
