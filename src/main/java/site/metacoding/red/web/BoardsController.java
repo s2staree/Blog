@@ -47,7 +47,7 @@ public class BoardsController {
 	// http://localhost:8000/
 	// http://localhost:8000/?page=0
 	@GetMapping({"/", "/boards"})
-	public String getBoardList(Model model, Integer page) { // 0 -> 0, 1->10, 2->20
+	public String getBoardList(Model model, Integer page) { // 0->0, 1->10, 2->20
 		if(page == null) page = 0;
 		int startNum = page * 10;
 
