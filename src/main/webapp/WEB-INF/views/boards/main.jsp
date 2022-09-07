@@ -32,7 +32,7 @@
          </li>
 
       <c:forEach var="num" begin="1" end="${paging.totalPage}" step="1">
-         <li class="page-item">
+         <li class="page-item" ${paging.currentPage == num-1 ? "active" : ""}>
 	         <a class="page-link" href="?page=${num-1}">
 	         ${num}
 	         </a>
