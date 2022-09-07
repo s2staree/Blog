@@ -3,6 +3,7 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
+
 	<table class="table table-striped">
 		<thead>
 			<tr>
@@ -23,14 +24,14 @@
 		</tbody>
 	</table>
 	
-   <ul class="pagination">
+	<div class = "d-fex justify-content-center">
+   	<ul class="pagination">
       <li class='page-item ${paging.first ? "disabled" : " "}'>
 	     <a class="page-link"
 	         href="?page=${paging.currentPage-1}">
 	         Prev
 	     </a>
          </li>
-
       <c:forEach var="num" begin="1" end="${paging.totalPage}" step="1">
          <li class="page-item" ${paging.currentPage == num-1 ? "active" : ""}>
 	         <a class="page-link" href="?page=${num-1}">
@@ -38,14 +39,14 @@
 	         </a>
          </li>
       </c:forEach>
-
       <li class='page-item ${paging.last ? "disabled" : " "}'>
 	      <a class="page-link"
 	         href="?page=${paging.currentPage+1}">
 	         Next
          </a>
          </li>
-   </ul>
+   	</ul>
+	</div>
 	
 	<a href="?page=${paging.currentPage-1}">이전페이지</a>
 	<c:forEach var="num" begin="1" end="${paging.totalPage}" step="1">
@@ -60,6 +61,7 @@
 		<h3>isLast : ${paging.last}</h3>
 		<h3>isFirst : ${paging.first}</h3>
 	</div>
+	
 </div>
 
 <%@ include file="../layout/footer.jsp"%>
