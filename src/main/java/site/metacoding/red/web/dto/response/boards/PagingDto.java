@@ -6,6 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PagingDto {
+	
 	private Integer totalCount;	// 총 게시글 수
 	private Integer totalPage;	// 총 페이지 수
 	private Integer currentPage;	// 현재 페이지 번호
