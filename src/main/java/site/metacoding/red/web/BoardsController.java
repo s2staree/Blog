@@ -33,7 +33,7 @@ public class BoardsController {
 		Boards boardsPS = boardsDao.findById(id);
 		
 		// 비정상 요청 체크
-		if(boardsPS != null) {	// if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는 게 좋다.
+		if(boardsPS == null) {	// if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는 게 좋다.
 			return "redirect:/boards/" + id;
 		}	// if + else문으로 짜면 분리가 안되므로 if문만 짜는게 분리가 편함!
 		
