@@ -28,14 +28,39 @@ public class BoardsController {
 	// @PostMapping("/boards/{id}/delete")
 	// @PostMapping("/boards/{id}/update")
 	
+	@GetMapping("/boards/{id}/updateForm") // boards 폼에 있는
+	public String updateForm(@PathVariable Integer id, Model model) {
+		Boards boardsPS = boardsDao.findById(id);
+		Users principal = (Users) session.getAttribute("principal");
+		
+		// 비정상 요청 체크
+		if(boardsPS == null) { // if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는게 좋다.
+			return "errors/badPage";
+		}
+		
+		// 인증 체크
+		if (principal == null) {
+			return "redirect:/loginForm";
+		}
+		
+		// 권한 체크 ( 세션 principal.getId() 와 boardsPS의 userId를 비교)
+		if(principal.getId() != boardsPS.getUsersId()) {
+			return "errors/badPage";
+		}
+		
+		model.addAttribute("boards", boardsPS);
+		return "boards/updateForm";
+	}
+	
 	@PostMapping("/boards/{id}/delete")
 	public String deleteBoards(@PathVariable Integer id) {
 		Users principal = (Users) session.getAttribute("principal");
 		Boards boardsPS = boardsDao.findById(id);
 		
+		// 공통로직 3가지
 		// 비정상 요청 체크
 		if(boardsPS == null) { // if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는게 좋다.
-			return "redirect:/boards/"+id;
+			return "erros/badPage";
 		}
 		
 		// 인증 체크
@@ -48,10 +73,11 @@ public class BoardsController {
 			return "redirect:/boards/"+id;
 		}
 		
-			
+		// 핵심 로직
 		boardsDao.delete(id);
 		return "redirect:/";
-	}
+
+	}	
 
 	@PostMapping("/boards")
 	public String writeBoards(WriteDto writeDto) {
