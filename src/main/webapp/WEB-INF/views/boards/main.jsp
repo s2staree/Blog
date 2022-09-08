@@ -3,6 +3,17 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
+
+	</br>
+	<div class="d-flex justify-content-end">
+		<div class="search_box" style="width:300px">
+	      <form class="d-flex" method="get" action="/">	<!-- /keyword=? -->
+	        <input class="form-control me-2" type="text" placeholder="Search" name="keyword">
+	        <button class="btn btn-primary" type="submit">Search</button>
+	      </form>
+		</div>
+	</div>
+
 	<table class="table table-striped">
 		<thead>
 			<tr>
