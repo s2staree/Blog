@@ -9,12 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.red.domain.boards.Boards;
 import site.metacoding.red.domain.boards.BoardsDao;
 import site.metacoding.red.domain.users.Users;
+import site.metacoding.red.web.dto.request.boards.UpdateDto;
 import site.metacoding.red.web.dto.request.boards.WriteDto;
 import site.metacoding.red.web.dto.response.boards.MainDto;
 import site.metacoding.red.web.dto.response.boards.PagingDto;
@@ -28,8 +28,10 @@ public class BoardsController {
 	// @PostMapping("/boards/{id}/delete")
 	// @PostMapping("/boards/{id}/update")
 	
-	@GetMapping("/boards/{id}/updateForm") // boards 폼에 있는
-	public String updateForm(@PathVariable Integer id, Model model) {
+	@PostMapping("/boards/{id}/update")
+	public String update(@PathVariable Integer id, UpdateDto updateDto) {
+		
+		// 1. 영속화
 		Boards boardsPS = boardsDao.findById(id);
 		Users principal = (Users) session.getAttribute("principal");
 		
@@ -48,12 +50,48 @@ public class BoardsController {
 			return "errors/badPage";
 		}
 		
+		// 2. 변경
+		boardsPS.글수정(updateDto);
+		
+		// 3. 수행
+		boardsDao.update(boardsPS);
+		
+		// 핵심 로직
+//		boardsDao.update(updateDto.toEntity(id));
+		return "redirect:/boards/"+id;
+	}
+	
+	@GetMapping("/boards/{id}/updateForm") // boards 폼에 있는
+	public String updateForm(@PathVariable Integer id, Model model) {
+		
+		// 영속화
+		Boards boardsPS = boardsDao.findById(id);
+		Users principal = (Users) session.getAttribute("principal");
+		
+		// 비정상 요청 체크
+		if(boardsPS == null) { // if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는게 좋다.
+			return "errors/badPage";
+		}
+		
+		// 인증 체크
+		if (principal == null) {
+			return "redirect:/loginForm";
+		}
+		
+		// 권한 체크 ( 세션 principal.getId() 와 boardsPS의 userId를 비교)
+		if(principal.getId() != boardsPS.getUsersId()) {
+			return "errors/badPage";
+		}
+		
+		// 핵심 로직
 		model.addAttribute("boards", boardsPS);
 		return "boards/updateForm";
 	}
 	
 	@PostMapping("/boards/{id}/delete")
 	public String deleteBoards(@PathVariable Integer id) {
+		
+		// 영속화
 		Users principal = (Users) session.getAttribute("principal");
 		Boards boardsPS = boardsDao.findById(id);
 		
