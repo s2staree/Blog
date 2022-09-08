@@ -16,6 +16,9 @@
 		select count(*) totalCount, ceil(count(*)/3) totalPage, #{page} currentPage, 0
 		first, 0 last
 		FROM boards
+		<if test="keyword != null">
+			WHERE title like '%'||#{keyword}||'%'
+		</if>
 		)
 	</select>
 
@@ -38,7 +41,7 @@
 		INNER JOIN
 		users u
 		ON b.usersId = u.id
-		WHERE title like '%#{keyword}%'
+		WHERE title like '%'||#{keyword}||'%'
 		ORDER BY b.id DESC
 		OFFSET #{startNum} ROWS
 		FETCH NEXT 3 ROWS ONLY
