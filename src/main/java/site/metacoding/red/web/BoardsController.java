@@ -45,7 +45,7 @@ public class BoardsController {
 			return "redirect:/loginForm";
 		}
 		
-		// 권한 체크 ( 세션 principal.getId() 와 boardsPS의 userId를 비교)
+		// 권한 체크 ( 세션 principal.getId()와 boardsPS의 userId를 비교)
 		if(principal.getId() != boardsPS.getUsersId()) {
 			return "errors/badPage";
 		}
@@ -78,7 +78,7 @@ public class BoardsController {
 			return "redirect:/loginForm";
 		}
 		
-		// 권한 체크 ( 세션 principal.getId() 와 boardsPS의 userId를 비교)
+		// 권한 체크 ( 세션 principal.getId()와 boardsPS의 userId를 비교)
 		if(principal.getId() != boardsPS.getUsersId()) {
 			return "errors/badPage";
 		}
@@ -98,16 +98,25 @@ public class BoardsController {
 		// 공통로직 3가지
 		// 비정상 요청 체크
 		if(boardsPS == null) { // if는 비정상 로직을 타게 해서 걸러내는 필터 역할을 하는게 좋다.
+			System.out.println("=================");
+			System.out.println("없는 번호를 요청하였습니다");
+			System.out.println("=================");
 			return "erros/badPage";
 		}
 		
 		// 인증 체크
 		if (principal == null) {
+			System.out.println("=================");
+			System.out.println("로그인 후 요청해 주세요.");
+			System.out.println("=================");
 			return "redirect:/loginForm";
 		}
 		
-		// 권한 체크 ( 세션 principal.getId() 와 boardsPS의 userId를 비교)
+		// 권한 체크 ( 세션 principal.getId()와 boardsPS의 userId를 비교)
 		if(principal.getId() != boardsPS.getUsersId()) {
+			System.out.println("=================");
+			System.out.println("해당 글을 삭제할 권한이 없습니다");
+			System.out.println("=================");
 			return "redirect:/boards/"+id;
 		}
 		
@@ -139,14 +148,18 @@ public class BoardsController {
 	@GetMapping({ "/", "/boards" })
 	public String getBoardList(Model model, Integer page, String keyword) { // 0 -> 0, 1->10, 2->20
 		
+		System.out.println("test : keyword : "+keyword);
+		
 		if (page == null) {
 			page = 0;
-			int startNum = page * 3;
+
 		}
+		int startNum = page * 3;
+		
 		if(keyword == null || keyword.isEmpty()) {
 			List<MainDto> boardsList = boardsDao.findAll(startNum);
 			PagingDto paging = boardsDao.paging(page, null);
-			paging.makeBlockInfo();
+			paging.makeBlockInfo(keyword);
 			
 			model.addAttribute("boardsList", boardsList);
 			model.addAttribute("paging", paging);
@@ -154,7 +167,7 @@ public class BoardsController {
 		}else {
 			List<MainDto> boardsList = boardsDao.findSearch(startNum, keyword);
 			PagingDto paging = boardsDao.paging(page, keyword);
-			paging.makeBlockInfo();
+			paging.makeBlockInfo(keyword);
 			
 			model.addAttribute("boardsList", boardsList);
 			model.addAttribute("paging", paging);
